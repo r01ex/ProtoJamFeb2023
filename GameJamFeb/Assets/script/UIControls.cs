@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 public class UIControls : MonoBehaviour
 {
-    int MAXSTAGE = 2;
+    int TOTALSTAGECOUNT = 2;
 
     bool isinStageSelect = false;
     [SerializeField] GameObject stageimage;
@@ -16,6 +16,30 @@ public class UIControls : MonoBehaviour
     [SerializeField] GameObject nextBtn;
     [SerializeField] GameObject prevBtn;
     int currentStage = 0;
+    bool isForStageSelect = false;
+    void OnEnable()
+    {
+        Debug.Log("OnEnable called");
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("OnSceneLoaded: " + scene.name);
+        Debug.Log(mode);
+        if(mode == LoadSceneMode.Additive)
+        {
+            Debug.Log(SceneManager.GetSceneAt(0).name);
+            SceneManager.UnloadSceneAsync(SceneManager.GetSceneAt(0));
+            isForStageSelect = true;
+        }
+    }
+    public void Start()
+    {
+        if(isForStageSelect)
+        {
+            gotoStageSelection();
+        }
+    }
     public void gotoStageSelection()
     {
         isinStageSelect = true;
@@ -26,7 +50,7 @@ public class UIControls : MonoBehaviour
     }
     public void changeSelectedStage(int n)
     {
-        if (n >= 0 && n < MAXSTAGE)
+        if (n >= 0 && n < TOTALSTAGECOUNT)
         {
             Debug.Log("changing to stage " + n);
             currentStage = n;
@@ -46,7 +70,7 @@ public class UIControls : MonoBehaviour
         {
             prevBtn.GetComponent<Button>().interactable = true;
         }
-        if(n==(MAXSTAGE-1))
+        if(n==(TOTALSTAGECOUNT - 1))
         {
             nextBtn.GetComponent<Button>().interactable = false;
         }
