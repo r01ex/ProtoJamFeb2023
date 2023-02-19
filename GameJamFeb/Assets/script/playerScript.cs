@@ -14,7 +14,6 @@ public class playerScript : MonoBehaviour
     [SerializeField] GameObject eggPrefab;
 
     public List<GameObject> stackedObjs = new List<GameObject>();
-    float stackHeight = 0;
 
     
     [SerializeField] float runMaxSpeed;
@@ -28,7 +27,6 @@ public class playerScript : MonoBehaviour
     [SerializeField] float gravityMult;
     [SerializeField] float jumpPower;
     float jumpedtime;
-
     public static playerScript Instance { get; private set; }
     private void Awake()
     {
@@ -84,7 +82,10 @@ public class playerScript : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.Q))
         {
-            stackedObjs[stackedObjs.Count-1].GetComponent<FragileScript>().drop(isOnGround());
+            if (stackedObjs.Count >= 1)
+            {
+                stackedObjs[stackedObjs.Count - 1].GetComponent<FragileScript>().drop(isOnGround());
+            }
         }
 
 
