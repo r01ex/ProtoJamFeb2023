@@ -8,6 +8,8 @@ public class FragileScript : MonoBehaviour
     Coroutine follow;
     public bool isfollowing = false;
     [SerializeField] GameObject forPickup;
+    bool isinSafe = false;
+    [SerializeField] float durability;
     public void drop(bool isonground)
     {
         if (isfollowing)
@@ -56,6 +58,29 @@ public class FragileScript : MonoBehaviour
             this.transform.SetParent(null);
             forPickup.SetActive(true);
             isfollowing = false;
+        }
+        if(collision.tag=="safeArea"&&isinSafe==true)
+        {
+            isinSafe = false;
+            gameFlowManager.Instance.changeCurrentSuccessCount(-1);
+        }
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "safeArea" && isinSafe == false)
+        {
+            isinSafe = true;
+            gameFlowManager.Instance.changeCurrentSuccessCount(1);
+        }
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log("collision impact : " + collision.relativeVelocity.magnitude);
+        if (collision.relativeVelocity.magnitude > durability)
+        {
+            gameFlowManager.Instance.fragileBreak();
+            playerScript.Instance.stackedObjs.Remove(this.gameObject);
+            Destroy(this.gameObject);
         }
     }
 }
