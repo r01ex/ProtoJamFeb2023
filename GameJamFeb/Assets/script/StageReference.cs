@@ -7,6 +7,7 @@ public class StageReference : MonoBehaviour
     public List<Sprite> stageSpriteList = new List<Sprite>();
     public List<string> stageNameList = new List<string>();
     public List<string> sceneNameList = new List<string>();
+    public List<Sprite> selectedstageSpriteList = new List<Sprite>();
     private void Awake()
     {
         if (Instance == null) { Instance = this; }

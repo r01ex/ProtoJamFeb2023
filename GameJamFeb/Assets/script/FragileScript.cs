@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class FragileScript : MonoBehaviour
 {
-    [SerializeField] private float followSpeed;
+    public float followSpeed;
+    public float stopSpeed;
+    public float durability;
     Coroutine follow;
     public bool isfollowing = false;
     [SerializeField] GameObject forPickup;
     bool isinSafe = false;
-    [SerializeField] float durability;
     public void drop(bool isonground)
     {
         if (isfollowing)
@@ -44,7 +45,7 @@ public class FragileScript : MonoBehaviour
         while (isFollowStart)
         {
             yield return new WaitForEndOfFrame();
-            transform.position = new Vector2((Mathf.Lerp(transform.position.x, followedSquare.position.x, followSpeed * Time.deltaTime)), transform.position.y);
+            transform.position = new Vector2((Mathf.Lerp(transform.position.x, followedSquare.position.x, Time.deltaTime * (playerScript.Instance.calculateFollowSpeed(this)))), transform.position.y);
         }
     }
 
@@ -69,6 +70,7 @@ public class FragileScript : MonoBehaviour
     {
         if (collision.tag == "safeArea" && isinSafe == false)
         {
+            Debug.Log("safe entered");
             isinSafe = true;
             gameFlowManager.Instance.changeCurrentSuccessCount(1);
         }
@@ -82,5 +84,13 @@ public class FragileScript : MonoBehaviour
             playerScript.Instance.stackedObjs.Remove(this.gameObject);
             Destroy(this.gameObject);
         }
+    }
+    private void Start()
+    {
+        gameFlowManager.Instance.stageEndEvent.AddListener(onStageEnd);
+    }
+    public void onStageEnd()
+    {
+        this.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
     }
 }
