@@ -18,9 +18,9 @@ public class FragilePickup : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
-                Debug.Log("e pressed in update");
-                playerScript.Instance.newObjectSpawn();
-                Destroy(this.transform.parent.gameObject);
+                GameObject p = this.transform.parent.gameObject;
+                playerScript.Instance.PickupFragile(p);
+                //Destroy(p);
             }
         }
         

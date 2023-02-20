@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using System.IO;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 public class gameFlowManager : MonoBehaviour
 {
     [SerializeField] TMPro.TextMeshProUGUI t;
@@ -18,6 +19,7 @@ public class gameFlowManager : MonoBehaviour
     public int successCount = 0;
     public int currentSuccessCount = 0;
     bool isgameOver = false;
+    public UnityEvent stageEndEvent;
     public int fragileCount
     {
         get
@@ -50,6 +52,7 @@ public class gameFlowManager : MonoBehaviour
         gameovercanvas.nextBtn.onClick.AddListener(nextStage);
         gameovercanvas.retryBtn.onClick.AddListener(retryStage);
         gameovercanvas.stageBtn.onClick.AddListener(stageSelect);
+        stageEndEvent.Invoke();
     }
     void gameTimeOver()
     {
@@ -60,6 +63,7 @@ public class gameFlowManager : MonoBehaviour
         gameovercanvas.nextBtn.interactable = false;  
         gameovercanvas.retryBtn.onClick.AddListener(retryStage);
         gameovercanvas.stageBtn.onClick.AddListener(stageSelect);
+        stageEndEvent.Invoke();
     }
 
     public void nextStage()

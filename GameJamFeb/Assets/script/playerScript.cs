@@ -1,17 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 public class playerScript : MonoBehaviour
 {
     Rigidbody2D rbody;
-    PolygonCollider2D collider2d;
+    Collider2D collider2d;
+    [SerializeField] Collider2D legleft;
+    [SerializeField] Collider2D legright;
     [SerializeField] LayerMask groundLayer;
     [SerializeField] LayerMask eggLayer;
     [SerializeField] LayerMask playerLayer;
-    [SerializeField] float speed;
-
-    [SerializeField] GameObject eggPrefab;
 
     public List<GameObject> stackedObjs = new List<GameObject>();
 
@@ -26,7 +25,9 @@ public class playerScript : MonoBehaviour
     float defaultgrav;
     [SerializeField] float gravityMult;
     [SerializeField] float jumpPower;
+    [SerializeField] float coyoteTime;
     float jumpedtime;
+    float coyoteTimeCounter;
     public static playerScript Instance { get; private set; }
     private void Awake()
     {
@@ -36,32 +37,52 @@ public class playerScript : MonoBehaviour
     void Start()
     {
         rbody = this.GetComponent<Rigidbody2D>();
-        collider2d = this.GetComponent<PolygonCollider2D>();
+        collider2d = this.GetComponent<Collider2D>();
         defaultgrav = rbody.gravityScale;
+        gameFlowManager.Instance.stageEndEvent.AddListener(onStageEnd);
     }
     public bool isOnGround()
     {
-        return collider2d.IsTouchingLayers(groundLayer);
+        return legleft.IsTouchingLayers(groundLayer) || legright.IsTouchingLayers(groundLayer);
     }
     void Update()
     {
-        
-        Debug.Log(collider2d.IsTouchingLayers(groundLayer));
-        if (Input.GetKeyDown(KeyCode.W) && (isOnGround()))
+        Debug.Log("player x vel : "+rbody.velocity.x);
+        Debug.Log("coyote jump time : " + coyoteTimeCounter);
+        if (isOnGround())
+        {
+            coyoteTimeCounter = coyoteTime;
+        }
+        else
+        {
+            coyoteTimeCounter -= Time.deltaTime;
+        }
+        if (Input.GetKeyDown(KeyCode.W) && coyoteTimeCounter > 0)
         {
             jumpedtime = Time.time;
             rbody.velocity += new Vector2(0, 7);
             longJump = true;
+            coyoteTimeCounter = 0;
         }
         else if (Input.GetKey(KeyCode.W) && (rbody.velocity.y > 0) && longJump == true)
         {
             rbody.AddForce(new Vector2(0, Time.deltaTime * jumpPower));
         }
-        else if(!Input.GetKey(KeyCode.W) || (longJump == true && Time.time - jumpedtime>=0.2f))
+        if(Input.GetKeyUp(KeyCode.W) || (longJump == true && Time.time - jumpedtime>=0.2f))
         {
             longJump = false;
+            coyoteTimeCounter = 0;
         }
-        
+        if (rbody.velocity.y < 0)
+        {
+            rbody.gravityScale = defaultgrav * gravityMult;
+        }
+        else
+        {
+            rbody.gravityScale = defaultgrav;
+        }
+
+
         if (Input.GetKey(KeyCode.A))
         {
             direction = -1;
@@ -86,18 +107,7 @@ public class playerScript : MonoBehaviour
             {
                 stackedObjs[stackedObjs.Count - 1].GetComponent<FragileScript>().drop(isOnGround());
             }
-        }
-
-
-        if (rbody.velocity.y<0)
-        {
-           rbody.gravityScale = defaultgrav * gravityMult;
-        }
-        else
-        {
-            rbody.gravityScale = defaultgrav;
-        }
-
+        }      
     }
     private void FixedUpdate()
     {
@@ -118,8 +128,7 @@ public class playerScript : MonoBehaviour
 
         #region Conserve Momentum
         if (Mathf.Abs(rbody.velocity.x) > Mathf.Abs(targetSpeed) && Mathf.Sign(rbody.velocity.x) == Mathf.Sign(targetSpeed) && Mathf.Abs(targetSpeed) > 0.01f)
-        {
-            
+        {          
             accelRate = 0;
         }
         #endregion
@@ -130,12 +139,12 @@ public class playerScript : MonoBehaviour
 
         float movement = speedDif * accelRate;
         //Debug.Log("movement : " + movement);
-        //Convert to a vector and apply to rigidbody
+        //Convert to vector and apply to rigidbody
         rbody.AddForce(movement * Vector2.right, ForceMode2D.Force);
     }
     private void Turn(bool isMovingRight)
     {
-        if (isMovingRight != isFacingRight)
+        if (isMovingRight != isFacingRight && rbody.bodyType != RigidbodyType2D.Static)
         {
             //stores scale and flips the player along the x axis, 
             Vector3 scale = transform.localScale;
@@ -145,22 +154,32 @@ public class playerScript : MonoBehaviour
             isFacingRight = !isFacingRight;
         }
     }
-    public void newObjectSpawn()
+    public void PickupFragile(GameObject fragile)
     {
         Debug.Log("new obj2 called");
-        GameObject newegg;
         if (stackedObjs.Count==0)
         {
-            newegg = Instantiate(eggPrefab);
-            newegg.transform.position += this.transform.position + new Vector3(0, 1, 0);
-            newegg.gameObject.GetComponent<FragileScript>().UpdateSquarePosition(transform, true);
+            fragile.transform.position = this.transform.position + new Vector3(0, 1.2f, 0);
+            fragile.gameObject.GetComponent<FragileScript>().UpdateSquarePosition(transform, true);
         }
         else
         {
-            newegg = Instantiate(eggPrefab);
-            newegg.transform.position = stackedObjs[stackedObjs.Count - 1].transform.localPosition + Vector3.up;
-            newegg.gameObject.GetComponent<FragileScript>().UpdateSquarePosition(stackedObjs[stackedObjs.Count - 1].transform, true);
+            fragile.transform.position = stackedObjs[stackedObjs.Count - 1].transform.localPosition + Vector3.up;
+            fragile.gameObject.GetComponent<FragileScript>().UpdateSquarePosition(stackedObjs[stackedObjs.Count - 1].transform, true);
         }
-        stackedObjs.Add(newegg);
+        stackedObjs.Add(fragile);
+    }
+    public float calculateFollowSpeed(FragileScript fragile)
+    {
+        float normal = (Mathf.Abs(rbody.velocity.x) / runMaxSpeed);
+        int constant = 10;
+        Debug.Log("normal : " + Mathf.Round(normal*1000)/1000);
+
+        //return (fragile.followSpeed * normal * normal) + (fragile.stopSpeed * (1 - (normal * normal))); //최대속도퍼센트 제곱에 따라서 f,s비율변화
+        return ((fragile.followSpeed - fragile.stopSpeed)/2) * (float)(Math.Tanh(constant * (normal - 0.5f))) + ((fragile.followSpeed + fragile.stopSpeed)/2); //시그모이드 따라서 fs비율변화
+    }
+    public void onStageEnd()
+    {
+        rbody.bodyType = RigidbodyType2D.Static;
     }
 }
