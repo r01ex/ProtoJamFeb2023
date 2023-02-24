@@ -150,13 +150,23 @@ public class FragileScript : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Debug.Log("collision impact : " + collision.relativeVelocity.magnitude);
-        if (collision.relativeVelocity.magnitude > durability * 2)
+        if (collision.gameObject.tag != "Player")
         {
-            healthPoint-=2;
+            if (collision.relativeVelocity.magnitude > durability * 2)
+            {
+                healthPoint -= 2;
+            }
+            else if (collision.relativeVelocity.magnitude > durability)
+            {
+                healthPoint--;
+            }
         }
-        else if(collision.relativeVelocity.magnitude > durability)
+        else if (collision.gameObject.tag == "Player")
         {
-            healthPoint--;
+            if (collision.relativeVelocity.magnitude > durability * 1)
+            {
+                healthPoint -= 1;
+            }
         }
     }
     private void Start()
