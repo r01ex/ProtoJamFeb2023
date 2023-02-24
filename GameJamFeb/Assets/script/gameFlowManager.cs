@@ -29,7 +29,7 @@ public class gameFlowManager : MonoBehaviour
         set
         {
             FragileCount = value;
-            if(FragileCount==0)
+            if(FragileCount==0 || FragileCount == currentSuccessCount)
             {
                 Debug.Log("GAMEOVER CALLED");
                 gameOver();
@@ -39,6 +39,7 @@ public class gameFlowManager : MonoBehaviour
    
     public void gameOver()
     {
+        Debug.Log("game over");
         isgameOver = true;
         DataHandler.Instance.changeStageData(stageNum, true, gametime, successCount);
         DataHandler.Instance.Save();

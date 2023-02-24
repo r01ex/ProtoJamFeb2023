@@ -9,9 +9,12 @@ public class UIControls : MonoBehaviour
     int TOTALSTAGEPAGECOUNT = 2;
 
     bool isinStageSelect = false;
-    [SerializeField] GameObject stageimage1;
-    [SerializeField] GameObject stageimage2;
-    [SerializeField] GameObject stageimage3;
+    [SerializeField] Image stageimage1;
+    [SerializeField] Image stageimage2;
+    [SerializeField] Image stageimage3;
+    [SerializeField] MultiImageBtn st1Btn;
+    [SerializeField] MultiImageBtn st2Btn;
+    [SerializeField] MultiImageBtn st3Btn;
 
     [SerializeField] GameObject stageCanvas;
     [SerializeField] GameObject homeCanvas;
@@ -61,27 +64,27 @@ public class UIControls : MonoBehaviour
         {
             Debug.Log("changing to stage " + n);
             currentStagePage = n;
-            stageimage1.SetActive(false);
-            stageimage2.SetActive(false);
-            stageimage3.SetActive(false);
+            st1Btn.gameObject.SetActive(false);
+            st2Btn.gameObject.SetActive(false);
+            st3Btn.gameObject.SetActive(false);
             try
             {
-                stageimage1.GetComponent<Image>().sprite = StageReference.Instance.stageSpriteList[3*n];
-                stageimage1.SetActive(true);
-                stageimage1.GetComponent<Button>().onClick.AddListener(delegate { selectStage(3 * n); });
-                stageimage2.GetComponent<Image>().sprite = StageReference.Instance.stageSpriteList[(3*n)+1];
-                stageimage2.SetActive(true);
-                stageimage2.GetComponent<Button>().onClick.AddListener(delegate { selectStage((3 * n) + 1); });
-                stageimage3.GetComponent<Image>().sprite = StageReference.Instance.stageSpriteList[(3*n)+2];
-                stageimage3.SetActive(true);
-                stageimage3.GetComponent<Button>().onClick.AddListener(delegate { selectStage((3 * n) + 2); });
+                stageimage1.sprite = StageReference.Instance.stageSpriteList[3*n];
+                st1Btn.gameObject.SetActive(true);
+                st1Btn.onClick.AddListener(delegate { selectStage(3 * n); });
+                
+                stageimage2.sprite = StageReference.Instance.stageSpriteList[(3*n)+1];
+                st2Btn.gameObject.SetActive(true);
+                st2Btn.onClick.AddListener(delegate { selectStage((3 * n) + 1); });
+               
+                stageimage3.sprite = StageReference.Instance.stageSpriteList[(3*n)+2];
+                st3Btn.gameObject.SetActive(true);
+                st3Btn.onClick.AddListener(delegate { selectStage((3 * n) + 2); });
             }
             catch(Exception e)
             {
                 Debug.Log(e);
             }
-            //playBtn.GetComponent<Button>().onClick.RemoveAllListeners();
-            //playBtn.GetComponent<Button>().onClick.AddListener(delegate { gotoStage(n); });
         }
         else
         {

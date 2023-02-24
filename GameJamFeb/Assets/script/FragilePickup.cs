@@ -14,34 +14,41 @@ public class FragilePickup : MonoBehaviour
         {
             eUI.transform.position = this.transform.position - new Vector3(0, 1, 0);
         }
-        if (PlayerisinObj)
+        if (PlayerisinObj && playerScript.Instance.LockedFragilePickup == this)
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
                 GameObject p = this.transform.parent.gameObject;
+                Debug.Log("picking up " + p);
                 playerScript.Instance.PickupFragile(p);
+                playerScript.Instance.LockedFragilePickup = null;
                 //Destroy(p);
             }
         }
         
     }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.layer == 7)
-        {
-            PlayerisinObj = true;
-            if (eUI == null)
-            {
-                eUI = Instantiate(euiPrefab, this.transform.position-new Vector3(0,1,0), Quaternion.identity);
-            }
-        }
-    }
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.layer == 7)
         {
+            if(playerScript.Instance.LockedFragilePickup == this)
+            {
+                playerScript.Instance.LockedFragilePickup = null;
+            }
             PlayerisinObj = false;
             Destroy(eUI);
+        }
+    }
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.layer == 7 && playerScript.Instance.LockedFragilePickup == null)
+        {
+            PlayerisinObj = true;
+            if (eUI == null)
+            {
+                eUI = Instantiate(euiPrefab, this.transform.position - new Vector3(0, 1, 0), Quaternion.identity);
+            }
+            playerScript.Instance.LockedFragilePickup = this;
         }
     }
 }
