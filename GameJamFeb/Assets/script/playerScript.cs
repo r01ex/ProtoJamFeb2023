@@ -31,6 +31,8 @@ public class playerScript : MonoBehaviour
     public float ItemFollowspeedMult = 1;
     public float ItemGravMult = 1;
 
+    public bool spikehitRecent = false;
+
     public static playerScript Instance { get; private set; }
     private void Awake()
     {
@@ -59,22 +61,25 @@ public class playerScript : MonoBehaviour
         {
             coyoteTimeCounter -= Time.deltaTime;
         }
-        if (Input.GetKeyDown(KeyCode.W) && coyoteTimeCounter > 0)
+        if (spikehitRecent == false)
         {
-            Debug.Log("w");
-            jumpedtime = Time.time;
-            rbody.velocity += new Vector2(0, 7);
-            longJump = true;
-            coyoteTimeCounter = 0;
-        }
-        else if (Input.GetKey(KeyCode.W) && (rbody.velocity.y > 0) && longJump == true)
-        {
-            rbody.AddForce(new Vector2(0, Time.deltaTime * jumpPower));
-        }
-        if(Input.GetKeyUp(KeyCode.W) || (longJump == true && Time.time - jumpedtime>=0.2f))
-        {
-            longJump = false;
-            coyoteTimeCounter = 0;
+            if (Input.GetKeyDown(KeyCode.W) && coyoteTimeCounter > 0)
+            {
+                Debug.Log("w");
+                jumpedtime = Time.time;
+                rbody.velocity += new Vector2(0, 7);
+                longJump = true;
+                coyoteTimeCounter = 0;
+            }
+            else if (Input.GetKey(KeyCode.W) && (rbody.velocity.y > 0) && longJump == true)
+            {
+                rbody.AddForce(new Vector2(0, Time.deltaTime * jumpPower));
+            }
+            if (Input.GetKeyUp(KeyCode.W) || (longJump == true && Time.time - jumpedtime >= 0.2f))
+            {
+                longJump = false;
+                coyoteTimeCounter = 0;
+            }
         }
         if (rbody.velocity.y < 0)
         {
@@ -114,7 +119,10 @@ public class playerScript : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        Run();     
+        if (spikehitRecent == false)
+        {
+            Run();
+        }
     }
     private void Run()
     {
