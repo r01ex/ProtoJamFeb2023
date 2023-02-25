@@ -41,7 +41,7 @@ public class FragilePickup : MonoBehaviour
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == 7 && playerScript.Instance.LockedFragilePickup == null)
+        if (collision.gameObject.layer == 7 && playerScript.Instance.LockedFragilePickup == null && playerScript.Instance.stackedObjs.Count<=3)
         {
             PlayerisinObj = true;
             if (eUI == null)
