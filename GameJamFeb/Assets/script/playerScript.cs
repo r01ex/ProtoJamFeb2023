@@ -37,6 +37,8 @@ public class playerScript : MonoBehaviour
 
     [SerializeField] GameObject leaveArea;
 
+    [SerializeField] Collider2D frontDropPos;
+    [SerializeField] Collider2D backDropPos;
 
     private void Awake()
     {
@@ -117,7 +119,14 @@ public class playerScript : MonoBehaviour
         {
             if (stackedObjs.Count >= 1)
             {
-                stackedObjs[stackedObjs.Count - 1].GetComponent<FragileScript>().drop(isOnGround(), MathF.Sign(this.transform.localScale.x));
+                if (isFacingRight == true && frontDropPos.IsTouchingLayers(groundLayer) == false)
+                {
+                    stackedObjs[stackedObjs.Count - 1].GetComponent<FragileScript>().drop(isOnGround(), MathF.Sign(this.transform.localScale.x));
+                }
+                else if (isFacingRight == false && backDropPos.IsTouchingLayers(groundLayer) == false)
+                {
+                    stackedObjs[stackedObjs.Count - 1].GetComponent<FragileScript>().drop(isOnGround(), MathF.Sign(this.transform.localScale.x));
+                }
             }
         }      
     }
