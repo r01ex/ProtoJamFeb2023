@@ -150,6 +150,10 @@ public class FragileScript : MonoBehaviour
             isinSafe = true;
             gameFlowManager.Instance.changeCurrentSuccessCount(1);
         }
+        if(collision.tag=="StuckHandler")
+        {
+            this.transform.position = collision.transform.GetChild(0).position;
+        }
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
