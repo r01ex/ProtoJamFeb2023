@@ -34,10 +34,6 @@ public class playerScript : MonoBehaviour
     public bool spikehitRecent = false;
 
     public static playerScript Instance { get; private set; }
-
-    [SerializeField] GameObject leaveArea;
-
-
     private void Awake()
     {
         if (Instance == null) { Instance = this; }
@@ -71,7 +67,7 @@ public class playerScript : MonoBehaviour
             {
                 Debug.Log("w");
                 jumpedtime = Time.time;
-                rbody.velocity = new Vector2(0, 7);
+                rbody.velocity += new Vector2(0, 7);
                 longJump = true;
                 coyoteTimeCounter = 0;
             }
@@ -181,17 +177,9 @@ public class playerScript : MonoBehaviour
             fragile.gameObject.GetComponent<FragileScript>().UpdateSquarePosition(stackedObjs[stackedObjs.Count - 1].transform, true);
         }
         stackedObjs.Add(fragile);
-
-        changeLeaveArea(1);
-
         this.gameObject.GetComponent<Animator>().SetInteger("PickedUpFragiles", stackedObjs.Count);
     }
-    public void changeLeaveArea(int mult)
-    {
-        leaveArea.GetComponent<SpriteRenderer>().size += new Vector2(0, 1.1f * mult);
-        leaveArea.GetComponent<BoxCollider2D>().offset = new Vector2(0, leaveArea.GetComponent<BoxCollider2D>().offset.y + 0.55f * mult);
-        leaveArea.GetComponent<BoxCollider2D>().size = new Vector2(2.15f, leaveArea.GetComponent<BoxCollider2D>().size.y + 1.1f * mult);
-    }
+
     public float calculateFollowSpeed(FragileScript fragile)
     {
         float normal = (Mathf.Abs(rbody.velocity.x) / runMaxSpeed);
@@ -205,4 +193,5 @@ public class playerScript : MonoBehaviour
     {
         rbody.bodyType = RigidbodyType2D.Static;
     }
+
 }
