@@ -71,7 +71,7 @@ public class playerScript : MonoBehaviour
             {
                 Debug.Log("w");
                 jumpedtime = Time.time;
-                rbody.velocity = new Vector2(0, 7);
+                rbody.velocity = new Vector2(rbody.velocity.x, 7);
                 longJump = true;
                 coyoteTimeCounter = 0;
             }
