@@ -67,12 +67,15 @@ public class FragileScript : MonoBehaviour
             this.gameObject.GetComponent<SpriteRenderer>().sprite = boxoutside;
             if (isonground)
             {
-                this.gameObject.transform.position = playerScript.Instance.gameObject.transform.position + new Vector3(1.5f*facing, 0, 0);
+                //this.gameObject.transform.position = playerScript.Instance.gameObject.transform.position + new Vector3(1.5f*facing, 0, 0);
+                this.gameObject.GetComponent<Rigidbody2D>().position = playerScript.Instance.gameObject.transform.position + new Vector3(1.5f*facing, 0, 0);
             }
             else
             {
-                this.gameObject.transform.position = playerScript.Instance.gameObject.transform.position + new Vector3(-1.5f*facing, 0, 0);
+                //this.gameObject.transform.position = playerScript.Instance.gameObject.transform.position + new Vector3(-1.5f*facing, 0, 0);
+                this.gameObject.GetComponent<Rigidbody2D>().position = playerScript.Instance.gameObject.transform.position + new Vector3(-1.5f * facing, 0, 0);
             }
+            playerScript.Instance.changeLeaveArea(-1);
         }
     }
     public IEnumerator dropbySpike(float fragileMagnitude)
@@ -131,6 +134,7 @@ public class FragileScript : MonoBehaviour
             forPickup.SetActive(true);
             isfollowing = false;
             this.gameObject.GetComponent<SpriteRenderer>().sprite = boxoutside;
+            playerScript.Instance.changeLeaveArea(-1);
         }
         if(collision.tag=="safeArea"&&isinSafe==true)
         {
