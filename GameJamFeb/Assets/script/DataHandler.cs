@@ -8,7 +8,7 @@ public class DataHandler : MonoBehaviour
     string dir;
     string filename;
     public static DataHandler Instance { get; private set; }
-    private GameData gameData;
+    public GameData gameData;
     private void Awake()
     {
         if (Instance == null) { Instance = this; }
