@@ -36,7 +36,8 @@ public class playerScript : MonoBehaviour
     public static playerScript Instance { get; private set; }
 
     [SerializeField] GameObject leaveArea;
-
+    [SerializeField] Collider2D frontDropPos;
+    [SerializeField] Collider2D backDropPos;
 
     private void Awake()
     {
@@ -113,13 +114,24 @@ public class playerScript : MonoBehaviour
         }
 
 
-        if(Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             if (stackedObjs.Count >= 1)
             {
-                stackedObjs[stackedObjs.Count - 1].GetComponent<FragileScript>().drop(isOnGround(), MathF.Sign(this.transform.localScale.x));
+                if (isOnGround() == true && this.transform.localScale.x > 0 && frontDropPos.IsTouchingLayers(groundLayer) == false)
+                {
+                    stackedObjs[stackedObjs.Count - 1].GetComponent<FragileScript>().drop(isOnGround(), MathF.Sign(this.transform.localScale.x));
+                }
+                else if (isOnGround() == true && this.transform.localScale.x < 0 && backDropPos.IsTouchingLayers(groundLayer) == false)
+                {
+                    stackedObjs[stackedObjs.Count - 1].GetComponent<FragileScript>().drop(isOnGround(), MathF.Sign(this.transform.localScale.x));
+                }
+                else if (isOnGround() == false && backDropPos.IsTouchingLayers(groundLayer) == false)
+                {
+                    stackedObjs[stackedObjs.Count - 1].GetComponent<FragileScript>().drop(isOnGround(), MathF.Sign(this.transform.localScale.x));
+                }
             }
-        }      
+        }
     }
     private void FixedUpdate()
     {
@@ -188,9 +200,9 @@ public class playerScript : MonoBehaviour
     }
     public void changeLeaveArea(int mult)
     {
-        leaveArea.GetComponent<SpriteRenderer>().size += new Vector2(0, 1.1f * mult);
-        leaveArea.GetComponent<BoxCollider2D>().offset = new Vector2(0, leaveArea.GetComponent<BoxCollider2D>().offset.y + 0.55f * mult);
-        leaveArea.GetComponent<BoxCollider2D>().size = new Vector2(2.15f, leaveArea.GetComponent<BoxCollider2D>().size.y + 1.1f * mult);
+        leaveArea.GetComponent<SpriteRenderer>().size += new Vector2(0, 1.4f * mult);
+        leaveArea.GetComponent<BoxCollider2D>().offset = new Vector2(0, leaveArea.GetComponent<BoxCollider2D>().offset.y + 0.7f * mult);
+        leaveArea.GetComponent<BoxCollider2D>().size = new Vector2(2.15f, leaveArea.GetComponent<BoxCollider2D>().size.y + 1.4f * mult);
     }
     public float calculateFollowSpeed(FragileScript fragile)
     {

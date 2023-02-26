@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
+using TMPro;
 public class UIControls : MonoBehaviour
 {
     int TOTALSTAGEPAGECOUNT = 2;
@@ -25,6 +26,7 @@ public class UIControls : MonoBehaviour
     [SerializeField] GameObject playBtn;
     [SerializeField] GameObject stageSelectPanel;
     [SerializeField] GameObject selectedstageImg;
+    [SerializeField] TextMeshProUGUI stageInfoText;
     int currentStagePage = 0;
     bool isForStageSelect = false;
     void OnEnable()
@@ -60,6 +62,7 @@ public class UIControls : MonoBehaviour
     }
     public void changeSelectedStage(int n)
     {
+        DataHandler.Instance.Load();
         if (n >= 0 && n < TOTALSTAGEPAGECOUNT)
         {
             Debug.Log("changing to stage " + n);
@@ -124,6 +127,15 @@ public class UIControls : MonoBehaviour
     public void selectStage(int n)
     {
         stageSelectPanel.SetActive(true);
+        GameData temp = DataHandler.Instance.gameData;
+        if (temp.isCleared[n] == true)
+        {
+            stageInfoText.text = "Time : " + temp.clearTime[n] + Environment.NewLine + "Score : " + temp.maxScore[n];
+        }
+        else
+        {
+            stageInfoText.text = "Not Cleared";
+        }
         selectedstageImg.GetComponent<Image>().sprite = StageReference.Instance.selectedstageSpriteList[n];
         playBtn.GetComponent<Button>().onClick.RemoveAllListeners();
         playBtn.GetComponent<Button>().onClick.AddListener(delegate { gotoStage(n); });
