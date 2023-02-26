@@ -49941,6 +49941,10 @@ PrefabInstance:
       value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 7116982575917547461, guid: 6d2d1b428573ae544912f245ae047988, type: 3}
+      propertyPath: stageNum
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7116982575917547461, guid: 6d2d1b428573ae544912f245ae047988, type: 3}
       propertyPath: successCount
       value: 4
       objectReference: {fileID: 0}
