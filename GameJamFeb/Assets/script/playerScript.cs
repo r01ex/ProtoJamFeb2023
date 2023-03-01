@@ -30,6 +30,8 @@ public class playerScript : MonoBehaviour
 
     public float ItemFollowspeedMult = 1;
     public float ItemGravMult = 1;
+    public GameObject slowfallItemSprite;
+    public GameObject beltItemSprite;
 
     public bool spikehitRecent = false;
 
@@ -217,4 +219,5 @@ public class playerScript : MonoBehaviour
     {
         rbody.bodyType = RigidbodyType2D.Static;
     }
+   
 }

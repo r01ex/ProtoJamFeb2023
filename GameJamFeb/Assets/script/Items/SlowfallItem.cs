@@ -12,15 +12,15 @@ public class SlowfallItem : MonoBehaviour
         if (collision.tag == "Player")
         {
             playerScript.Instance.ItemGravMult = mult;
-            this.gameObject.SetActive(false);
             Invoke("reset", duration);
-            //add sprite
+            playerScript.Instance.slowfallItemSprite.SetActive(true);
+            this.gameObject.SetActive(false);         
         }
     }
     void reset()
     {
         playerScript.Instance.ItemGravMult = 1;
-        //remove sprite
+        playerScript.Instance.slowfallItemSprite.SetActive(false);
         Destroy(this.gameObject);
     }
 }

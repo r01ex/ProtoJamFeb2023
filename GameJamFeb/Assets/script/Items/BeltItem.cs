@@ -12,15 +12,21 @@ public class BeltItem : MonoBehaviour
         if(collision.tag=="Player")
         {
             playerScript.Instance.ItemFollowspeedMult = mult;
-            this.gameObject.SetActive(false);
             Invoke("reset", duration);
-            //add sprite
+            /*
+            foreach (GameObject g in playerScript.Instance.stackedObjs)
+            {
+                g.GetComponent<FragileScript>().BeltItem(duration);
+            }
+            */
+            playerScript.Instance.beltItemSprite.SetActive(true);
+            this.gameObject.SetActive(false);
         }
     }
     void reset()
     {
+        playerScript.Instance.beltItemSprite.SetActive(false);
         playerScript.Instance.ItemFollowspeedMult = 1;
-        //remove sprite
         Destroy(this.gameObject);
     }
 }
