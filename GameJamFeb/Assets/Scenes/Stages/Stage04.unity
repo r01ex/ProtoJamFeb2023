@@ -20433,7 +20433,7 @@ SpriteRenderer:
   m_Size: {x: 20.48, y: 20.48}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &2045643810
@@ -20730,10 +20730,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   t: {fileID: 1685532115}
   gameOverCanvasPrefab: {fileID: 2818955246324764542, guid: fbcc8d897c0041a4ca485819fb1412ad, type: 3}
-  stageNum: 0
+  stageNum: 3
   TotalFragileCount: 6
   maxTime: 999
-  successCount: 3
+  successCount: 0
   currentSuccessCount: 0
   stageEndEvent:
     m_PersistentCalls:

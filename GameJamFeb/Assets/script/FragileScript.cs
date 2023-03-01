@@ -15,6 +15,8 @@ public class FragileScript : MonoBehaviour
     [SerializeField] int HP;
     [SerializeField] List<Sprite> breakingSprites;
     [SerializeField] Sprite boxoutside;
+
+    [SerializeField] GameObject beltimg;
     private int healthPoint
     {
         get
@@ -184,5 +186,14 @@ public class FragileScript : MonoBehaviour
     public void onStageEnd()
     {
         this.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+    }
+    public void BeltItem(float duration)
+    {
+        beltimg.SetActive(true);
+        Invoke("Beltoff", duration);
+    }
+    public void Beltoff()
+    {
+        beltimg.SetActive(false);
     }
 }
