@@ -26,12 +26,14 @@ public class playerScript : MonoBehaviour
     [SerializeField] float jumpPower;
     [SerializeField] float coyoteTime;
     float jumpedtime;
-    float coyoteTimeCounter;
+    public float coyoteTimeCounter;
 
     public float ItemFollowspeedMult = 1;
     public float ItemGravMult = 1;
     public GameObject slowfallItemSprite;
     public GameObject beltItemSprite;
+    public float BeltitemdurationLeft = 0;
+    public float SlowfallitemdurationLeft = 0;
 
     public bool spikehitRecent = false;
 
@@ -60,6 +62,8 @@ public class playerScript : MonoBehaviour
     }
     void Update()
     {
+        BeltitemdurationLeft -= Time.deltaTime;
+        SlowfallitemdurationLeft -= Time.deltaTime;
         if (isOnGround())
         {
             coyoteTimeCounter = coyoteTime;

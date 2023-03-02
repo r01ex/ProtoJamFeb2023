@@ -351,7 +351,7 @@ Sprite:
         format: 0
         dimension: 0
       m_DataSize: 80
-      _typelessdata: 000000bf0000003f000000000000003f0000003f00000000000000bf000000bf000000000000003f000000bf000000000000000000000000000000000000000000000000000000000000000000000000
+      _typelessdata: 000000bf0000003f000000000000003f0000003f00000000000000bf000000bf000000000000003f000000bf00000000000000000000803f0000803f0000803f00000000000000000000803f00000000
     m_Bindpose: []
     textureRect:
       serializedVersion: 2
@@ -44756,9 +44756,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4647393018613592018, guid: 9ea40ab2e5cdc244bb2c210c3689b6d6, type: 3}
+      propertyPath: m_SortingOrder
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 5498170473248541229, guid: 9ea40ab2e5cdc244bb2c210c3689b6d6, type: 3}
       propertyPath: m_Name
       value: SafeArea
+      objectReference: {fileID: 0}
+    - target: {fileID: 5498170473248541230, guid: 9ea40ab2e5cdc244bb2c210c3689b6d6, type: 3}
+      propertyPath: m_SortingOrder
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 5498170473248541231, guid: 9ea40ab2e5cdc244bb2c210c3689b6d6, type: 3}
       propertyPath: m_RootOrder
@@ -44774,11 +44782,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5498170473248541231, guid: 9ea40ab2e5cdc244bb2c210c3689b6d6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -40.51
+      value: -40.53
       objectReference: {fileID: 0}
     - target: {fileID: 5498170473248541231, guid: 9ea40ab2e5cdc244bb2c210c3689b6d6, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -18.02
+      value: -17.45
       objectReference: {fileID: 0}
     - target: {fileID: 5498170473248541231, guid: 9ea40ab2e5cdc244bb2c210c3689b6d6, type: 3}
       propertyPath: m_LocalPosition.z

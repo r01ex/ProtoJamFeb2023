@@ -11,7 +11,8 @@ public class Jumppad : MonoBehaviour
         if(collision.collider.tag=="playerLeg")
         {
             Debug.Log("jumppad collide");
-            playerScript.Instance.GetComponent<Rigidbody2D>().AddForce(new Vector2(0, magnitude), ForceMode2D.Impulse);
+            playerScript.Instance.GetComponent<Rigidbody2D>().velocity = new Vector2(playerScript.Instance.GetComponent<Rigidbody2D>().velocity.x, magnitude);
+            playerScript.Instance.coyoteTimeCounter = 0;
         }
     }
 }
