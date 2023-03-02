@@ -11,6 +11,7 @@ public class BeltItem : MonoBehaviour
     {
         if(collision.tag=="Player")
         {
+            playerScript.Instance.BeltitemdurationLeft = duration;
             playerScript.Instance.ItemFollowspeedMult = mult;
             Invoke("reset", duration);
             /*
@@ -25,8 +26,11 @@ public class BeltItem : MonoBehaviour
     }
     void reset()
     {
-        playerScript.Instance.beltItemSprite.SetActive(false);
-        playerScript.Instance.ItemFollowspeedMult = 1;
-        Destroy(this.gameObject);
+        if (playerScript.Instance.BeltitemdurationLeft <= 0.1f)
+        {
+            playerScript.Instance.beltItemSprite.SetActive(false);
+            playerScript.Instance.ItemFollowspeedMult = 1;
+            Destroy(this.gameObject);
+        }
     }
 }

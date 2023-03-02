@@ -378,10 +378,13 @@ MonoBehaviour:
   gravityMult: 2
   jumpPower: 3000
   coyoteTime: 0.3
+  coyoteTimeCounter: 0
   ItemFollowspeedMult: 1
   ItemGravMult: 1
   slowfallItemSprite: {fileID: 5057279005860812231}
   beltItemSprite: {fileID: 4693708440413600569}
+  BeltitemdurationLeft: 0
+  SlowfallitemdurationLeft: 0
   spikehitRecent: 0
   leaveArea: {fileID: 5811043228101440649}
   frontDropPos: {fileID: 2107306706278489398}
@@ -641,7 +644,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0080961585, y: 0.22510457}
+  m_Offset: {x: -0.009372562, y: 0.27833992}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -652,7 +655,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.048576, y: 1.4502091}
+  m_Size: {x: 0.9490159, y: 1.3437384}
   m_EdgeRadius: 0
 --- !u!1 &5811043229175624380
 GameObject:
