@@ -79,11 +79,11 @@ public class DataHandler : MonoBehaviour
         {
             if (gameData.isCleared[stagenum] == true)
             {
-                if(cleartime<gameData.clearTime[stagenum])
+                if (cleartime < gameData.clearTime[stagenum])
                 {
                     gameData.clearTime[stagenum] = cleartime;
                 }
-                if(score>gameData.userScore[stagenum])
+                if (score > gameData.userScore[stagenum])
                 {
                     gameData.userScore[stagenum] = score;
                 }

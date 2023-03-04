@@ -179,6 +179,10 @@ public class FragileScript : MonoBehaviour
             }
         }
     }
+    private void Awake()
+    {
+        gameFlowManager.Instance.RegistFragile();
+    }
     private void Start()
     {
         gameFlowManager.Instance.stageEndEvent.AddListener(onStageEnd);
