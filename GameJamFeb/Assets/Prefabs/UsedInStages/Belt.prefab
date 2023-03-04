@@ -114,6 +114,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 094e4ca730052894bb27bdffdb133acd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  duration: 10
+  duration: 999
   mult: 10
   beltSpritePrefab: {fileID: 0}

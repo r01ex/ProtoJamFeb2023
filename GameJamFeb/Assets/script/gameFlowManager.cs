@@ -7,13 +7,14 @@ using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 public class gameFlowManager : MonoBehaviour
 {
-    [SerializeField] TMPro.TextMeshProUGUI t;
+    public UI_HUD HUD;
     [SerializeField] GameObject gameOverCanvasPrefab;
     [SerializeField] int stageNum;
     int TOTALSTAGECOUNT = 6;
     public static gameFlowManager Instance { get; private set; }
     int FragileCount;
-    [SerializeField] int TotalFragileCount;
+    int TotalFragileCount;
+    public void RegistFragile() { TotalFragileCount++; }
     float gametime = 0;
     [SerializeField] float maxTime;
     public int successCount = 0;
@@ -119,7 +120,8 @@ public class gameFlowManager : MonoBehaviour
             {
                 gameTimeOver();
             }
-            t.text = "time: " + gametime + "\nsuccessCount: " + successCount + "\ncurrentSuccessCount: " + currentSuccessCount + "\nRemaining Unbroken Fragile: " + fragileCount;
+
+            HUD?.UpdateHUD(gametime, TotalFragileCount, successCount, currentSuccessCount, fragileCount);
         }
     }
    

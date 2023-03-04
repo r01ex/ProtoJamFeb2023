@@ -7,9 +7,9 @@ using System;
 using TMPro;
 public class UIControls : MonoBehaviour
 {
-    int TOTALSTAGEPAGECOUNT = 2;
+    const int TOTAL_STAGE_PAGE_COUNT = 2;
+    const int STAGES_PER_PAGE = 3;
 
-    bool isinStageSelect = false;
     [SerializeField] Image stageimage1;
     [SerializeField] Image stageimage2;
     [SerializeField] Image stageimage3;
@@ -17,14 +17,14 @@ public class UIControls : MonoBehaviour
     [SerializeField] MultiImageBtn st2Btn;
     [SerializeField] MultiImageBtn st3Btn;
 
-    [SerializeField] GameObject stageCanvas;
-    [SerializeField] GameObject homeCanvas;
+    [SerializeField] UI_StageBoard _board;
+    [SerializeField] UI_Title _title;
     [SerializeField] GameObject nextBtn;
     [SerializeField] GameObject prevBtn;
 
     [SerializeField] GameObject backBtn;
     [SerializeField] GameObject playBtn;
-    [SerializeField] GameObject stageSelectPanel;
+    [SerializeField] UI_StageDetail _detail;
     [SerializeField] GameObject selectedstageImg;
     [SerializeField] TextMeshProUGUI stageInfoText;
     int currentStagePage = 0;
@@ -38,7 +38,7 @@ public class UIControls : MonoBehaviour
     {
         Debug.Log("OnSceneLoaded: " + scene.name);
         Debug.Log(mode);
-        if(mode == LoadSceneMode.Additive)
+        if (mode == LoadSceneMode.Additive)
         {
             Debug.Log(SceneManager.GetSceneAt(0).name);
             SceneManager.UnloadSceneAsync(SceneManager.GetSceneAt(0));
@@ -47,23 +47,48 @@ public class UIControls : MonoBehaviour
     }
     public void Start()
     {
-        if(isForStageSelect)
+        if (isForStageSelect)
         {
             gotoStageSelection();
         }
     }
     public void gotoStageSelection()
     {
-        isinStageSelect = true;
-        homeCanvas.SetActive(false);
-        stageCanvas.SetActive(true);
-        changeSelectedStage(0);
-
+        if (_title.GoUp())
+        {
+            _board.gameObject.SetActive(true);
+            //changeSelectedStage(0);
+            InitStages();
+        }
     }
+    public void goBacktoHome()
+    {
+        _title.GoDown(delegate { _board.gameObject.SetActive(false); });
+    }
+
+    public void InitStages()
+    {
+        var DataHandler = global::DataHandler.Instance;
+        DataHandler.Load();
+        var Datas = DataHandler.gameData;
+
+        for (int i = 0; i < Datas.isCleared.Length; ++i)
+        {
+            bool isLastStage = !Datas.isCleared[i];
+
+            _board.CreateStageButton(StageReference.Instance.StageDatas[i]);
+
+            if (isLastStage)
+                break;
+        }
+    }
+
+
+
     public void changeSelectedStage(int n)
     {
         DataHandler.Instance.Load();
-        if (n >= 0 && n < TOTALSTAGEPAGECOUNT)
+        if (n >= 0 && n < TOTAL_STAGE_PAGE_COUNT)
         {
             Debug.Log("changing to stage " + n);
             currentStagePage = n;
@@ -72,19 +97,19 @@ public class UIControls : MonoBehaviour
             st3Btn.gameObject.SetActive(false);
             try
             {
-                stageimage1.sprite = StageReference.Instance.stageSpriteList[3*n];
+                stageimage1.sprite = StageReference.Instance.StageDatas[STAGES_PER_PAGE * n].Portrait;
                 st1Btn.gameObject.SetActive(true);
-                st1Btn.onClick.AddListener(delegate { selectStage(3 * n); });
-                
-                stageimage2.sprite = StageReference.Instance.stageSpriteList[(3*n)+1];
+                st1Btn.onClick.AddListener(delegate { selectStage(STAGES_PER_PAGE * n); });
+
+                stageimage2.sprite = StageReference.Instance.StageDatas[(STAGES_PER_PAGE * n) + 1].Portrait;
                 st2Btn.gameObject.SetActive(true);
-                st2Btn.onClick.AddListener(delegate { selectStage((3 * n) + 1); });
-               
-                stageimage3.sprite = StageReference.Instance.stageSpriteList[(3*n)+2];
+                st2Btn.onClick.AddListener(delegate { selectStage((STAGES_PER_PAGE * n) + 1); });
+
+                stageimage3.sprite = StageReference.Instance.StageDatas[(STAGES_PER_PAGE * n) + 2].Portrait;
                 st3Btn.gameObject.SetActive(true);
-                st3Btn.onClick.AddListener(delegate { selectStage((3 * n) + 2); });
+                st3Btn.onClick.AddListener(delegate { selectStage((STAGES_PER_PAGE * n) + 2); });
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Debug.Log(e);
             }
@@ -93,22 +118,10 @@ public class UIControls : MonoBehaviour
         {
             Debug.Log("no stage avail");
         }
-        if(n==0)
-        {
-            prevBtn.GetComponent<Button>().interactable = false;
-        }
-        else
-        {
-            prevBtn.GetComponent<Button>().interactable = true;
-        }
-        if(n==(TOTALSTAGEPAGECOUNT - 1))
-        {
-            nextBtn.GetComponent<Button>().interactable = false;
-        }
-        else
-        {
-            nextBtn.GetComponent<Button>().interactable = true;
-        }
+
+        prevBtn.GetComponent<Button>().interactable = (n != 0);
+
+        nextBtn.GetComponent<Button>().interactable = (n != (TOTAL_STAGE_PAGE_COUNT - 1));
     }
     public void nextStageSelect()
     {
@@ -118,31 +131,12 @@ public class UIControls : MonoBehaviour
     {
         changeSelectedStage(currentStagePage - 1);
     }
-    public void goBacktoHome()
-    {
-        isinStageSelect = false;
-        homeCanvas.SetActive(true);
-        stageCanvas.SetActive(false);
-    }
+
     public void selectStage(int n)
     {
-        stageSelectPanel.SetActive(true);
-        GameData temp = DataHandler.Instance.gameData;
-        if (temp.isCleared[n] == true)
+        if(_detail.GoUp())
         {
-            stageInfoText.text = "Time : " + temp.clearTime[n] + Environment.NewLine + "Score : " + temp.maxScore[n];
+            _detail.SetDetail(n);
         }
-        else
-        {
-            stageInfoText.text = "Not Cleared";
-        }
-        selectedstageImg.GetComponent<Image>().sprite = StageReference.Instance.selectedstageSpriteList[n];
-        playBtn.GetComponent<Button>().onClick.RemoveAllListeners();
-        playBtn.GetComponent<Button>().onClick.AddListener(delegate { gotoStage(n); });
-        backBtn.GetComponent<Button>().onClick.AddListener(delegate { stageSelectPanel.SetActive(false); });
-    }
-    public void gotoStage(int stagenum)
-    {
-        SceneManager.LoadScene(StageReference.Instance.sceneNameList[stagenum]);
     }
 }
